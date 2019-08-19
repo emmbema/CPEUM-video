@@ -10,8 +10,7 @@
 <!-- Librairies externes -->
 	<script src="libs/jquery-3.4.1.min.js"></script>
 	<script src="libs/pep.js"></script>
-	<script src="libs/babylon.js"></script>
-	<script src="libs/babylonjs.loaders.min.js"></script>
+	<script src="libs/ol.js"></script>
 	<script src="libs/fabric.min.js"></script>
 	<script src="libs/merge-images.js"></script>
 	<script src="libs/jszip.min.js"></script>
@@ -20,15 +19,16 @@
 	<!-- <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,700&display=swap" rel="stylesheet"> -->
 
 <!-- Ressources projet -->
-	<link rel="stylesheet" href="css/photogr.css">
-	<script src="jscript/photogr.js"></script>
+	<link rel="stylesheet" href="css/parcours.css">
+	<script src="jscript/parcours.js"></script>
 </head>
 <body>
 <div id="opener"></div>
 <div id="container">
 	
 	<div id="viewer-pane">
-		<canvas id="cpeum-viewer" touch-action="none"></canvas>
+		<video id="cpeum-video" controls></video>
+		<div id="cpeum-carte"></div>
 		<div id="dessin-pane">			
 			<canvas id="cpeum-dessin" touch-action="none"></canvas>
 			<div id="menu-dessin">
@@ -172,8 +172,8 @@
 					</g>
 				</svg>
 			</div>
-			<label for="importer" class="button">Importer</label>
-			<input type="file" files multiple title="Importer un nouveau modèle 3D" id="importer" style="display: none">
+			<label for="importer" class="button" title="Importer un nouvel enregistrement vidéo">Importer</label>
+			<input type="file" files id="importer" style="display: none">
 		</div>
 	</div>
 	<div id="gallery-pane">
