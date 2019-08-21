@@ -278,61 +278,29 @@ $(document).ready(function(){
 
 
 
-
 //____________________Vidéo____________________
 
 
 
 //____________________Carte____________________
 
-var carte = new ol.Map({
-	target: "cpeum-carte",
-	layers: [
-		new ol.layer.Tile({
-			source: new ol.source.OSM()
-		})
-	],
-	view: new ol.View({
-		center: ol.proj.fromLonLat([-73.5, 45.5]),
-		zoom: 8
-	})
-});
+var carte = L.map("cpeum-carte").setView([45.508, -73.587], 14);
+
+L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+	maxZoom: 18,
+}).addTo(carte);
 	
 
 	//___________CAPTURE_D'ÉCRAN____________
 
-	var captureBabylon;
+	var captureVideo;
 	var captureCarte;
 	var captureFabric;
 	var captureViewer;
-	var capCameraPosition;
-	var capCameraTarget;	
+	var capPosition;
 
 	$("#capture").click(function() {
-
-		capCameraPosition = camera.position;
-		capCameraTarget = camera.getTarget();
-
-		// Ajout de la balise de capture
-
-		var punaise = BABYLON.MeshBuilder.CreateSphere("punaise", {diameter: planRadius/100}, scene);
-		var punaiseMat = new BABYLON.StandardMaterial("punaiseMat", scene);
-		punaiseMat.emissiveColor = new BABYLON.Color3(1, 0, 0);
-		punaiseMat.diffuseColor = new BABYLON.Color3(1, 0, 0);
-		punaiseMat.specularColor = new BABYLON.Color3(1, 0, 0);
-		punaise.material = punaiseMat;
-		punaise.position = new BABYLON.Vector3(capCameraPosition.x, cpeumMesh.getBoundingInfo().boundingBox.maximumWorld.y, capCameraPosition.z);
-			
-		// Ajout de la ligne de vision
-
-		var isoColor = new BABYLON.Color4(1,0,0,1);
-		var isovist = BABYLON.MeshBuilder.CreateLines("isovist", {
-			points: [punaise.position, new BABYLON.Vector3(capCameraTarget.x, cpeumMesh.getBoundingInfo().boundingBox.maximumWorld.y, capCameraTarget.z)],
-			colors: [isoColor, new BABYLON.Color4(0,0,0,1)],
-			useVertexAlpha: false,
-		}, scene);
-		punaise.alwaysSelectAsActiveMesh = true;
-		isovist.alwaysSelectAsActiveMesh = true;
 
 		// Fonction pour révéler les images dans l'interface
 
@@ -358,7 +326,7 @@ var carte = new ol.Map({
 
 			if (calqueState) {
 				captureFabric = calque.toDataURL("image/png", 1.0);
-				mergeImages([captureBabylon, captureFabric]).then(b64 => {
+				mergeImages([captureVideo, captureFabric]).then(b64 => {
 					captureViewer = b64;
 					revealCaptures();
 				});
@@ -367,7 +335,7 @@ var carte = new ol.Map({
 			// Sinon, si pas en train de dessiner...
 
 			else {
-				captureViewer = captureBabylon;
+				captureViewer = captureVideo;
 				revealCaptures();
 			};
 			
@@ -377,38 +345,26 @@ var carte = new ol.Map({
 
 		var cartePromise = function () {
 
-			//scene.clearColor = new BABYLON.Color4(1,1,1,0.0000000001)
-			scene.render();				
-			BABYLON.Tools.CreateScreenshotUsingRenderTarget(engine, camera2, 1600, function (data) {
-				captureCarte = data;
+			carte.once('rendercomplete', function (event) {
+				captureCarte = event.context.canvas.toDataURL();
+				
+				// Faire quelquechose avec le data...
 
-				// Retrait de la balise de capture (essentiel sinon elle intercepte les "pick" ultérieurs)
-				punaise.alwaysSelectAsActiveMesh = false;
-				isovist.alwaysSelectAsActiveMesh = false;
-				punaise.dispose();
-				isovist.dispose();
+			});
+			carte.renderSync();
 
-				appendCaptures();
-			}, undefined, 16, true);
 		};
 
 		// Fonction de capture du panneau principal
 
-		var viewerPromise = function () {
+		var videoPromise = function () {
 
-			BABYLON.Tools.CreateScreenshot(engine, camera, {
-				width: canvas.width,
-				height: canvas.height,
-				precision: 1,
-				},
-				function (data) {
-					captureBabylon = data					
-					cartePromise();
-				}				
-			);						
+			// À développer
+
+			cartePromise();					
 		};
 
-		viewerPromise();
+		videoPromise();
 
 	});
 
@@ -525,7 +481,25 @@ var carte = new ol.Map({
 	});
 
 	// Importation de média
+	var videoFile;
+	var gpxFile;
 
-	//$("#importer")
+	$("#importer").val("");
+	$("#importer").on("input", function (event) {
+		console.log(event.target.files[0].name.split(".").pop());
 
+		for ( var i = 0; i < event.target.files.length; i++ ) {
+			currentFile = event.target.files[i];
+			if ( currentFile.type=="video/mp4" ) {
+				videoFile = currentFile;
+			} else if ( currentFile.name.split(".").pop()=="gpx" ) {
+				gpxFile = currentFile
+			} else { 
+				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo .MP4 et un tracé gps .GPX");
+			};
+		};
+
+		var videoFile = event.target.files[0];
+		$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));
+	});
 });

@@ -3,20 +3,22 @@
 <html lang="en">
 <head>
   	<meta charset="utf-8">
-	<title>CPEUM : Visualisation</title>
-	<meta name="description" content="CPEUM-Photogrammétrie">
+	<title>CPEUM : Vidéo</title>
+	<meta name="description" content="Parcours commentés">
 	<meta name="author" content="CPEUM">
 
 <!-- Librairies externes -->
 	<script src="libs/jquery-3.4.1.min.js"></script>
-	<script src="libs/pep.js"></script>
-	<script src="libs/ol.js"></script>
+	<script src="libs/pep.js"></script>	
 	<script src="libs/fabric.min.js"></script>
 	<script src="libs/merge-images.js"></script>
 	<script src="libs/jszip.min.js"></script>
 	<script src="libs/FileSaver.min.js"></script>
 
-	<!-- <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,700&display=swap" rel="stylesheet"> -->
+	<!-- <script src="libs/ol.js"></script> -->
+
+	<link rel="stylesheet" href="css/leaflet.css">
+	<script src="libs/leaflet.js"></script>
 
 <!-- Ressources projet -->
 	<link rel="stylesheet" href="css/parcours.css">
@@ -27,7 +29,9 @@
 <div id="container">
 	
 	<div id="viewer-pane">
-		<video id="cpeum-video" controls></video>
+		<div id="video-container">
+			<video id="cpeum-video" controls></video>
+		</div>
 		<div id="cpeum-carte"></div>
 		<div id="dessin-pane">			
 			<canvas id="cpeum-dessin" touch-action="none"></canvas>
@@ -173,7 +177,7 @@
 				</svg>
 			</div>
 			<label for="importer" class="button" title="Importer un nouvel enregistrement vidéo">Importer</label>
-			<input type="file" files id="importer" style="display: none">
+			<input type="file" multiple files id="importer" accept="video/mp4, .gpx" style="display: none">
 		</div>
 	</div>
 	<div id="gallery-pane">
