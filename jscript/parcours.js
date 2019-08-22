@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
 	setTimeout(function() {
 		$("#opener").fadeOut(1200);
@@ -284,13 +284,30 @@ $(document).ready(function(){
 
 //____________________Carte____________________
 
-var carte = L.map("cpeum-carte").setView([45.508, -73.587], 14);
+	var carte = L.map("cpeum-carte");
+	carte.setView([45.508, -73.587], 13);
+	L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+		maxZoom: 20,
+	}).addTo(carte);
 
-L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-	maxZoom: 18,
-}).addTo(carte);
+	var gpsLayer;
+	var gpsData;
+	var cpeumLat, cpeumLon, cpeumTime;
 	
+	// Fonction appelée suite à la lecture des fichiers importés (et conversion toGeoJSON si fichier .gpx)
+
+	var cpeumGPS = function () {
+		console.log(gpsData.geometry.coordinates[1][1]);
+
+		for (var pt = 0; pt < gpsData.geometry.coordinates.length; pt++) {
+			
+		}
+
+		gpsLayer = L.geoJSON(gpsData).addTo(carte);
+		carte.flyToBounds(gpsLayer.getBounds(), {animate: true, duration: 2.5});
+	}
+
 
 	//___________CAPTURE_D'ÉCRAN____________
 
@@ -345,13 +362,15 @@ L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
 
 		var cartePromise = function () {
 
-			carte.once('rendercomplete', function (event) {
-				captureCarte = event.context.canvas.toDataURL();
-				
-				// Faire quelquechose avec le data...
+			// À revoir depuis déplacement vers Leaflet!
 
-			});
-			carte.renderSync();
+			// carte.once('rendercomplete', function (event) {
+			// 	captureCarte = event.context.canvas.toDataURL();
+				
+			// 	// Faire quelquechose avec le data...
+
+			// });
+			// carte.renderSync();
 
 		};
 
@@ -481,25 +500,50 @@ L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
 	});
 
 	// Importation de média
+
 	var videoFile;
-	var gpxFile;
+	var gpsFile;	
+	var gpxFlag = false;	
 
 	$("#importer").val("");
 	$("#importer").on("input", function (event) {
-		console.log(event.target.files[0].name.split(".").pop());
 
-		for ( var i = 0; i < event.target.files.length; i++ ) {
-			currentFile = event.target.files[i];
-			if ( currentFile.type=="video/mp4" ) {
-				videoFile = currentFile;
-			} else if ( currentFile.name.split(".").pop()=="gpx" ) {
-				gpxFile = currentFile
-			} else { 
-				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo .MP4 et un tracé gps .GPX");
-			};
+		var lecteurGPS = new FileReader();
+		lecteurGPS.onload = function(e) {
+			if ( gpxFlag ) {
+				// gpsData = Fonction de conversion vers geoJSON (lecteurGPS.result);
+				!gpxFlag;
+			} else {
+				gpsData = JSON.parse(lecteurGPS.result);				
+			};			
+			cpeumGPS();
 		};
 
-		var videoFile = event.target.files[0];
-		$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));
+		for ( var i = 0; i < event.target.files.length; i++ ) {
+
+			currentFile = event.target.files[i];
+
+			// Si le fichier est un vidéo...
+			if ( currentFile.type=="video/mp4" ) {
+				videoFile = currentFile;
+				$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));
+			}
+			// S'il s'agit de données gps...
+			else if ( currentFile.name.split(".").pop()=="gpx" ) {
+				gpsFile = currentFile;
+				gpxFlag = true;
+				lecteurGPS.readAsText(gpsFile);
+			}
+			else if ( currentFile.name.split(".").pop()=="geojson" ) {
+				gpsFile = currentFile;
+				lecteurGPS.readAsText(gpsFile);
+			}
+			// S'il ne correspond à aucun de ces formats...
+			else { 
+				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo (.mp4) et un tracé gps (.gpx ou .geojson)");
+			};
+		};
 	});
+
+
 });
