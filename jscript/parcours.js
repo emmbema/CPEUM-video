@@ -284,29 +284,62 @@ $(document).ready(function () {
 
 //____________________Carte____________________
 
-	var carte = L.map("cpeum-carte");
+	var carte = L.map("cpeum-carte", {attributionControl: false, zoomControl: false});
 	carte.setView([45.508, -73.587], 13);
 	L.tileLayer("http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+		attribution: "",//'&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
 		maxZoom: 20,
 	}).addTo(carte);
 
 	var gpsLayer;
 	var gpsData;
 	var cpeumLat, cpeumLon, cpeumTime;
+	var videoTime = 0;
+	var gpsTime;
+	var gpsIndex;
+	var punaise, punaiseLatLng;
 	
-	// Fonction appelée suite à la lecture des fichiers importés (et conversion toGeoJSON si fichier .gpx)
+	// Fonction appelée suite à la lecture des fichiers importés (et suite à la conversion vers GeoJSON si fichier .gpx)
 
 	var cpeumGPS = function () {
-		console.log(gpsData.geometry.coordinates[1][1]);
-
-		for (var pt = 0; pt < gpsData.geometry.coordinates.length; pt++) {
-			
-		}
-
-		gpsLayer = L.geoJSON(gpsData).addTo(carte);
+		gpsLayer = L.geoJSON(gpsData, {color: "rgba(0,0,0,0.75)"}).addTo(carte);
 		carte.flyToBounds(gpsLayer.getBounds(), {animate: true, duration: 2.5});
+		punaiseLatLng = L.GeoJSON.coordsToLatLng(gpsData.geometry.coordinates[0]);
+		punaise = L.circleMarker(punaiseLatLng, {radius: 8, color: "rgb(250,252,255)", fillColor: "rgb(245,40,35)", fillOpacity: 1}).addTo(carte);
 	}
+
+	// Rester attentif au timestamp du vidéo
+
+	// function nearest(val,arr) {
+	// 	var mid;
+	// 	var lo = 0;
+	// 	var hi = arr.length - 1;
+	  
+	// 	while (hi - lo > 1) {
+	// 		mid = Math.floor ((lo + hi) / 2);
+	// 		if (arr[mid] < val) {
+	// 			lo = mid;
+	// 		} else {
+	// 			hi = mid;
+	// 		}
+	// 	}
+	// 	if (val - arr[lo] <= arr[hi] - val) {
+	// 		return arr[lo];
+	// 	}
+	// 	return arr[hi];
+	// }
+
+	$("#cpeum-video").on("timeupdate", function(e) {
+		videoTime = e.target.currentTime;
+		gpsIndex = gpsData.properties.RelativeMicroSec.findIndex( function (n) {
+			return n >= videoTime*1000000;
+		});
+
+		$("#gallery p").html(gpsIndex);
+		punaiseLatLng = L.GeoJSON.coordsToLatLng(gpsData.geometry.coordinates[gpsIndex]);
+		punaise.setLatLng(punaiseLatLng);
+
+	});
 
 
 	//___________CAPTURE_D'ÉCRAN____________
@@ -377,10 +410,16 @@ $(document).ready(function () {
 		// Fonction de capture du panneau principal
 
 		var videoPromise = function () {
+			var video = document.getElementById("cpeum-video");			
+			var canVid = document.createElement("canvas");
+			canVid.width = video.videoWidth;
+			canVid.height = video.videoHeight;
+			canVid.getContext("2d").drawImage(video, 0, 0, canVid.width, canVid.height);
+	 
+			captureVideo = canVid.toDataURL();
+			console.log(captureVideo);
 
-			// À développer
-
-			cartePromise();					
+			//cartePromise();					
 		};
 
 		videoPromise();
@@ -503,7 +542,7 @@ $(document).ready(function () {
 
 	var videoFile;
 	var gpsFile;	
-	var gpxFlag = false;	
+	var gpxFlag = false;
 
 	$("#importer").val("");
 	$("#importer").on("input", function (event) {
@@ -526,7 +565,7 @@ $(document).ready(function () {
 			// Si le fichier est un vidéo...
 			if ( currentFile.type=="video/mp4" ) {
 				videoFile = currentFile;
-				$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));
+				$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));				
 			}
 			// S'il s'agit de données gps...
 			else if ( currentFile.name.split(".").pop()=="gpx" ) {
@@ -544,6 +583,5 @@ $(document).ready(function () {
 			};
 		};
 	});
-
 
 });
