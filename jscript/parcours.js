@@ -310,32 +310,13 @@ $(document).ready(function () {
 
 	// Rester attentif au timestamp du vidéo
 
-	// function nearest(val,arr) {
-	// 	var mid;
-	// 	var lo = 0;
-	// 	var hi = arr.length - 1;
-	  
-	// 	while (hi - lo > 1) {
-	// 		mid = Math.floor ((lo + hi) / 2);
-	// 		if (arr[mid] < val) {
-	// 			lo = mid;
-	// 		} else {
-	// 			hi = mid;
-	// 		}
-	// 	}
-	// 	if (val - arr[lo] <= arr[hi] - val) {
-	// 		return arr[lo];
-	// 	}
-	// 	return arr[hi];
-	// }
-
 	$("#cpeum-video").on("timeupdate", function(e) {
 		videoTime = e.target.currentTime;
 		gpsIndex = gpsData.properties.RelativeMicroSec.findIndex( function (n) {
 			return n >= videoTime*1000000;
 		});
 
-		$("#gallery p").html(gpsIndex);
+		$("#gallery p").html("video timestamp update: "+videoTime+", gps data index: "+gpsIndex);
 		punaiseLatLng = L.GeoJSON.coordsToLatLng(gpsData.geometry.coordinates[gpsIndex]);
 		punaise.setLatLng(punaiseLatLng);
 
@@ -410,14 +391,24 @@ $(document).ready(function () {
 		// Fonction de capture du panneau principal
 
 		var videoPromise = function () {
-			var video = document.getElementById("cpeum-video");			
+			var cWidth = $("#video-container").width();
+			var cHeight = $("#video-container").height();
+			var video = document.getElementById("cpeum-video");
 			var canVid = document.createElement("canvas");
-			canVid.width = video.videoWidth;
-			canVid.height = video.videoHeight;
-			canVid.getContext("2d").drawImage(video, 0, 0, canVid.width, canVid.height);
+			canVid.width = cWidth;
+			canVid.height = cHeight;
+
+			var scale = Math.min(cWidth / video.videoWidth, cHeight / video.videoHeight);
+			var videoX = (cWidth-(video.videoWidth*scale))/2;
+			var videoY = (cHeight-(video.videoHeight*scale))/2;
+			canVid.getContext("2d").fillStyle = "rgb(25,28,30)";
+			canVid.getContext("2d").fillRect(0, 0, cWidth, cHeight);
+			canVid.getContext("2d").drawImage(video, videoX, videoY, video.videoWidth*scale, video.videoHeight*scale);
 	 
 			captureVideo = canVid.toDataURL();
-			console.log(captureVideo);
+			var imgvid = new Image();
+			imgvid.src = captureVideo;
+			window.open("").document.write(imgvid.outerHTML);
 
 			//cartePromise();					
 		};
@@ -540,18 +531,31 @@ $(document).ready(function () {
 
 	// Importation de média
 
-	var videoFile;
-	var gpsFile;	
 	var gpxFlag = false;
-
-	$("#importer").val("");
+	
 	$("#importer").on("input", function (event) {
 
 		var lecteurGPS = new FileReader();
-		lecteurGPS.onload = function(e) {
+		lecteurGPS.onloadend = function(e) {
 			if ( gpxFlag ) {
+
 				// gpsData = Fonction de conversion vers geoJSON (lecteurGPS.result);
-				!gpxFlag;
+
+				var gpx = lecteurGPS.result
+				gpsData = toGeoJSON.gpx(jQuery.parseXML(gpx)).features[0];
+
+				// Correction du formattage des timestamps
+
+				var absTime = [];
+				var relTime = [];
+				gpsData.properties.coordTimes.forEach( function (rawTime) {
+					absTime.push(Date.parse(rawTime)*1000);
+					relTime.push(Date.parse(rawTime)*1000-absTime[0]);
+				});
+				gpsData.properties.AbsoluteUtcMicroSec = absTime;
+				gpsData.properties.RelativeMicroSec = relTime;
+				
+				gpxFlag = false;
 			} else {
 				gpsData = JSON.parse(lecteurGPS.result);				
 			};			
@@ -564,24 +568,21 @@ $(document).ready(function () {
 
 			// Si le fichier est un vidéo...
 			if ( currentFile.type=="video/mp4" ) {
-				videoFile = currentFile;
-				$("#cpeum-video").attr("src", URL.createObjectURL(videoFile));				
+				$("#cpeum-video").attr("src", URL.createObjectURL(currentFile));
 			}
 			// S'il s'agit de données gps...
 			else if ( currentFile.name.split(".").pop()=="gpx" ) {
-				gpsFile = currentFile;
 				gpxFlag = true;
-				lecteurGPS.readAsText(gpsFile);
+				lecteurGPS.readAsText(currentFile);
 			}
 			else if ( currentFile.name.split(".").pop()=="geojson" ) {
-				gpsFile = currentFile;
-				lecteurGPS.readAsText(gpsFile);
+				lecteurGPS.readAsText(currentFile);
 			}
 			// S'il ne correspond à aucun de ces formats...
 			else { 
 				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo (.mp4) et un tracé gps (.gpx ou .geojson)");
 			};
-		};
+		};		
 	});
 
 });

@@ -15,7 +15,7 @@
 	<script src="libs/jszip.min.js"></script>
 	<script src="libs/FileSaver.min.js"></script>
 
-	<!-- <script src="libs/ol.js"></script> -->
+	<script src="libs/togeojson.js"></script>
 
 	<link rel="stylesheet" href="css/leaflet.css">
 	<script src="libs/leaflet.js"></script>
@@ -30,10 +30,10 @@
 <div id="container">
 	
 	<div id="viewer-pane">
+		<div id="cpeum-carte"></div>
 		<div id="video-container">
 			<video id="cpeum-video" controls></video>
-		</div>
-		<div id="cpeum-carte"></div>
+		</div>		
 		<div id="dessin-pane">			
 			<canvas id="cpeum-dessin" touch-action="none"></canvas>
 			<div id="menu-dessin">
@@ -138,8 +138,8 @@
 		</div>
 		<div id="menu">
 			<div title="Démarrer l'écran d'annotation" id="dessiner" class="button">
-				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px"
-				height="40px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px"
+				height="32px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 					<g id="dessiner-start">
 						<path d="M45,18v24.742C45,43.987,43.986,45,42.741,45H7.259C6.013,45,5,43.987,5,42.742V13.258C5,12.013,6.013,11,7.259,11H26
 						c1.828,0,5.828-4,4-4H6.259C3.359,7,1,9.359,1,12.258v31.484C1,46.642,3.359,49,6.259,49h37.482C46.641,49,49,46.642,49,43.742V14
@@ -152,8 +152,8 @@
 					</g>
 				</svg>
 				<div class="arret-dessiner">
-					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="53px"
-					height="53px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="42px"
+					height="42px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 						<g id="dessiner-stop">
 							<path d="M11.5,2.5"/>
 							<path d="M28.535,22l9.025-9.025c0.389-0.389,0.389-1.025,0-1.414L35.439,9.44c-0.389-0.389-1.025-0.389-1.414,0L25,18.465
@@ -165,8 +165,8 @@
 				</div>
 			</div>
 			<div title="Ajouter une capture d'écran à la galerie" id="capture" class="button">
-				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="42px"
-				height="42px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="33px"
+				height="33px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 					<g id="capturer">
 						<circle cx="25" cy="27.125" r="7.736"/>
 						<path d="M44.021,14h-7.91l-2.299-5.172C33.365,7.822,32.1,7,31,7H19c-1.1,0-2.366,0.822-2.813,1.828L13.889,14H12.5l-0.171-1.027
@@ -177,7 +177,22 @@
 					</g>
 				</svg>
 			</div>
-			<label for="importer" class="button" title="Importer un nouvel enregistrement vidéo">Importer</label>
+			<label for="importer" class="button" title="Importer un nouvel enregistrement vidéo/gps">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="33px"
+				height="38px" viewBox="0 0 50 55" enable-background="new 0 0 50 50" xml:space="preserve">
+					<g>
+						<path d="M29.725,36.894c0.976-0.977,1.977-1.559,1-2.535l-6.541-6.542c-0.921-0.922-1.501-1.033-2.536,0l-6.81,6.809
+						c-0.977,0.976,0.023,1.559,1,2.535c1.04,1.039,1.772,0.764,2.536,0L21,33.534V53c0,1.381,0.644,1.583,2.025,1.583
+						C24.406,54.583,25,54.381,25,53V33.563l2.189,3.188C28.166,37.727,28.738,37.881,29.725,36.894z"/>
+						<path d="M38,2H20.417c-0.016,0-0.03,0.006-0.046,0.006c-1.339,0-4.964,2.119-9.135,6.243C7.5,11.943,5.458,17.583,5.09,19.405
+						C5.025,19.728,5,20.509,5,20.688V44c0,1.104,0.896,2,2,2h8c1.104,0,1.292-0.896,1.292-2S16.104,42,15,42H9V19.523
+						c0.406-0.151,4.375-1.96,9.767-1.122c0.672,0.104,1.518-0.146,1.92-0.682s0.299-1.366,0.076-1.997
+						C20.7,15.542,19.322,11.504,21.688,6H36v36h-6c-1.104,0-1.417,0.896-1.417,2s0.313,2,1.417,2h8c1.104,0,2-0.896,2-2V4
+						C40,2.896,39.104,2,38,2z M16.427,14.354c-1.503,0.018-3.312,0.104-5.028,0.426c0.744-1.364,1.626-2.696,2.617-3.654
+						c0.886-0.857,1.793-1.622,2.655-2.289C16.255,11.04,16.268,12.94,16.427,14.354z"/>
+					</g>
+				</svg>
+			</label>
 			<input type="file" multiple files id="importer" accept="video/mp4, .gpx, .geojson" style="display: none">
 		</div>
 	</div>

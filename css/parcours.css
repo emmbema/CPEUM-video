@@ -25,6 +25,10 @@ html, body {
 	display: block;
 	z-index: 9999;
 }
+canvas {
+	padding: 0px;
+	margin: 0px;
+}
 
 /* __________ STYLE DE L'ANIMATION DE CHARGEMENT __________ */
 
@@ -90,38 +94,49 @@ html, body {
 /* __________ STYLE DU VISUALISEUR __________ */
 
 #viewer-pane {
+	padding: 0px;
 	position: absolute;
 	left: 0px;
 	right: 300px;
 	height: 100%;
 }
 #video-container {
-	display: block;
-	height: 70%;
+	position: absolute;
+	display: inline-block;
+	height: 75%;
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
 	background-color: rgb(235,235,238);
+	top: 0px;
+	left: 0px;
 }
-#cpeum-video {
+#cpeum-video {	
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
 	height: 100%;
 	left: 0px;
 	top: 0px;
-	background-color: rgb(5,5,5);
+	background-color: rgb(25,28,30);
 	object-fit: contain;
 	border: none;
+	outline: none;
+
+	-webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 #cpeum-carte {
+	position: absolute;
 	margin: 0px;
 	padding: 0px;
-	display: block;
+	display: inline-block;
 	width: 100%;
-	height: 30%;
+	height: 25%;
 	border: none;
-	top: 0px;
+	bottom: 0px;
 	left: 0px;
 }
 
@@ -541,7 +556,7 @@ html, body {
 	position: absolute;
 	display: inline-block;
 	top: 50%;
-	right: 35px;
+	right: 25px;
 	width: auto;
 	height: auto;
 	background-color: transparent;
@@ -559,14 +574,14 @@ html, body {
 #menu .button {
 	cursor: pointer;
 	display: block;
-	line-height: 62px;
+	line-height: 52px;
 	text-align: center;
 	position: relative;
-	width: 65px;
-	height: 65px;
-	margin: 25px 0px 20px 0px;
+	width: 55px;
+	height: 55px;
+	margin: 20px 0px 15px 0px;
 	border-radius: 100%;
-	background-color: rgba(225,225,225,0.6);
+	background-color: rgba(245,250,255,0.7);
 	box-shadow: 2px 5px 8px -3px rgba(0,0,0,0.25);
 
 	transition: all 0.35s ease;
@@ -578,7 +593,7 @@ html, body {
 	transition: all 0.35s ease;
 }
 #menu .button svg {
-	margin-top: 10px;
+	margin-top: 9px;
 	background-color: transparent;
 	fill: rgb(45,45,45);
 	transition: all 0.35s ease;
