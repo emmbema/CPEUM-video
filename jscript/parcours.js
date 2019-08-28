@@ -297,15 +297,17 @@ $(document).ready(function () {
 	var videoTime = 0;
 	var gpsTime;
 	var gpsIndex;
-	var punaise, punaiseLatLng;
+	var punaise, punaiseLatLng, punaiseInited = false;
 	
 	// Suite à la lecture des fichiers importés (et suite à la conversion vers GeoJSON si fichier .gpx) : création du tracé gps et de la punaise
 
 	var cpeumGPS = function () {
+		if ( punaiseInited ) { carte.removeLayer(punaise); };
 		gpsLayer = L.geoJSON(gpsData, {color: "rgba(0,0,0,0.75)"}).addTo(carte);
 		carte.flyToBounds(gpsLayer.getBounds(), {animate: true, duration: 2.5});
 		punaiseLatLng = L.GeoJSON.coordsToLatLng(gpsData.geometry.coordinates[0]);
 		punaise = L.circleMarker(punaiseLatLng, {radius: 8, color: "rgb(250,252,255)", fillColor: "rgb(245,40,35)", fillOpacity: 1}).addTo(carte);
+		punaiseInited = true;
 	}
 
 	// Rester attentif au timestamp du vidéo et positionner la punaise en conséquence
@@ -545,20 +547,31 @@ $(document).ready(function () {
 				
 				gpxFlag = false;
 			} else {
-				gpsData = JSON.parse(lecteurGPS.result);				
+				gpsData = JSON.parse(e.target.result);
 			};			
 			cpeumGPS();
 		};
+
+		var vidData;
+		var lecteurVideo = new FileReader();
+		lecteurVideo.onloadend = function(e) {
+			vidData = new Uint8Array(e.target.result);
+			console.log(vidData);
+		}
 
 		for ( var i = 0; i < event.target.files.length; i++ ) {
 
 			currentFile = event.target.files[i];
 
 			// Si le fichier est un vidéo...
+
 			if ( currentFile.type=="video/mp4" ) {
 				$("#cpeum-video").attr("src", URL.createObjectURL(currentFile));
+				//lecteurVideo.readAsArrayBuffer(currentFile);
 			}
+
 			// S'il s'agit de données gps...
+
 			else if ( currentFile.name.split(".").pop()=="gpx" ) {
 				gpxFlag = true;
 				lecteurGPS.readAsText(currentFile);
@@ -566,7 +579,9 @@ $(document).ready(function () {
 			else if ( currentFile.name.split(".").pop()=="geojson" ) {
 				lecteurGPS.readAsText(currentFile);
 			}
+
 			// S'il ne correspond à aucun de ces formats...
+
 			else { 
 				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo (.mp4) et un tracé gps (.gpx ou .geojson)");
 			};
