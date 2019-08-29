@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
 	setTimeout(function() {
-		$("#opener").fadeOut(1200);
-	}, 400);
+		$("#opener").fadeOut(800);
+	}, 200);
 
 //________________Interface dessin________________
 
@@ -568,6 +568,7 @@ $(document).ready(function () {
 			if ( currentFile.type=="video/mp4" ) {
 				$("#cpeum-video").attr("src", URL.createObjectURL(currentFile));
 				//lecteurVideo.readAsArrayBuffer(currentFile);
+				document.title = "CPEUM : " + currentFile.name.substr(0,currentFile.name.lastIndexOf("."));
 			}
 
 			// S'il s'agit de données gps...
