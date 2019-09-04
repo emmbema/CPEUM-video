@@ -563,9 +563,9 @@ $(document).ready(function () {
 
 			currentFile = event.target.files[i];
 
-			// Si le fichier est un vidéo...
+			// Si le fichier est un vidéo (.mp4 ou .mov)...
 
-			if ( currentFile.type=="video/mp4" ) {
+			if ( currentFile.type=="video/mp4" || currentFile.name.split(".").pop()=="mov" ) {
 				$("#cpeum-video").attr("src", URL.createObjectURL(currentFile));
 				//lecteurVideo.readAsArrayBuffer(currentFile);
 				document.title = "CPEUM : " + currentFile.name.substr(0,currentFile.name.lastIndexOf("."));
@@ -584,9 +584,15 @@ $(document).ready(function () {
 			// S'il ne correspond à aucun de ces formats...
 
 			else { 
-				alert("Les fichiers ne semblent pas avoir la bonne extension. S.V.P. s'assurer d'utiliser une vidéo (.mp4) et un tracé gps (.gpx ou .geojson)");
+				alert("Les fichiers ne semblent pas être de formats compatibles. S.V.P. s'assurer d'utiliser une vidéo (.mp4) et un tracé gps (.gpx ou .geojson)");
 			};
 		};		
 	});
+
+	// Corriger les "sticky hovers" des boutons sur appareils touch
+
+	function hoveroff() {
+		//this.
+	};
 
 });
