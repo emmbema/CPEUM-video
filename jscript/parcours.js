@@ -426,6 +426,11 @@ $(document).ready(function () {
 
 	$("#dessiner").on("click", function () {
 		calqueState = !calqueState;
+		if (calqueState) {
+			$("#cpeum-video").removeAttr("controls");
+		} else if (!calqueState) {
+			$("#cpeum-video").attr("controls","");
+		}
 		$("#dessin-pane").slideToggle(350);
 		$(this).children(".arret-dessiner").fadeToggle(200);
 		console.log("calque state ="+calqueState);
