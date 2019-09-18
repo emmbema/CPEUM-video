@@ -106,38 +106,7 @@ $("#dessiner").on("click", function () {
 	}
 	$("#dessin-pane").slideToggle(350);
 	$(this).children(".arret-dessiner").fadeToggle(200);
-	console.log("calque state ="+calqueState);
-});
-
-// Surlignage du mode Dessiner
-activeDessiner = function () {
-	$("#dessiner-mode").css({ backgroundColor : "rgb("+inkColor.r+","+inkColor.g+","+inkColor.b+")", width : "434px", cursor : "default" });
-	$("#calque-dessiner").children("svg").css({ left : "18px",  fill : "rgb(245,245,250)" });
-	$("#ecrire-mode").css({ backgroundColor : "", width : "", cursor : "" });
-	$("#calque-ecrire").children("svg").css({ left : "", fill : "" });
-
-	$("#text-size").hide(250);
-	$("#brush-size").show(350);
-	$("#opacity").show(350);
-};
-
-activeDessiner();
-
-// Surlignage du mode Écrire
-activeEcrire = function () {
-	$("#ecrire-mode").css({ backgroundColor : "rgb("+inkColor.r+","+inkColor.g+","+inkColor.b+")", width : "244px", cursor : "default" });
-	$("#calque-ecrire").children("svg").css({ left : "18px", fill : "rgb(245,245,250)" });
-	$("#dessiner-mode").css({ backgroundColor : "", width : "", cursor : "" });
-	$("#calque-dessiner").children("svg").css({ left : "", fill : "" });
-
-	$("#brush-size").hide(250);
-	$("#opacity").hide(250);
-	$("#text-size").show(350);
-};
-
-// Affichage de la palette de couleur
-$("#palette").click( function () {
-	$("#echantillons-container").toggle(250);
+	//console.log("calque state ="+calqueState);
 });
 
 // Lightbox de la galerie

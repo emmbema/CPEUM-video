@@ -30,68 +30,8 @@ canvas {
 	margin: 0px;
 }
 
-/* __________ STYLE DE L'ANIMATION DE CHARGEMENT __________ */
 
-#spinner {
-	top:50%;
-	left: 50%;
-	margin: -42px 0px 0px -32px;
-	display: inline-block;
-	position: absolute;
-	width: 68px;
-	height: 15px;
-}
-#spinner div {
-  position: absolute;
-  top: 1px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: rgb(75,72,70);
-  animation-timing-function: cubic-bezier(0, 1, 1, 0);
-}
-#spinner div:nth-child(1) {
-  left: 0px;
-  animation: lds-ellipsis1 0.8s infinite;
-}
-#spinner div:nth-child(2) {
-  left: 0px;
-  animation: lds-ellipsis2 0.8s infinite;
-}
-#spinner div:nth-child(3) {
-  left: 26px;
-  animation: lds-ellipsis2 0.8s infinite;
-}
-#spinner div:nth-child(4) {
-  left: 52px;
-  animation: lds-ellipsis3 0.8s infinite;
-}
-@keyframes lds-ellipsis1 {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes lds-ellipsis3 {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-@keyframes lds-ellipsis2 {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(26px, 0);
-  }
-}
-
-/* __________ STYLE DU VISUALISEUR __________ */
+/*** Style du visualiseur ***/
 
 #viewer-pane {
 	padding: 0px;
@@ -140,6 +80,8 @@ canvas {
 	left: 0px;
 }
 
+/*** CPEUM Dessin ***/
+
 #dessin-pane {
 	top: 0px;
 	left: 0px;
@@ -148,20 +90,28 @@ canvas {
 	width: 100%;
 	height: 100%;
 	display: none;
-	box-shadow: 0px 15px 35px -15px rgba(0,0,0,0.2)
+	box-shadow: 0px 15px 35px -15px rgba(0,0,0,0.2);
+	background: rgb(255,255,255);
+	background: -moz-linear-gradient(0deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 350px);
+	background: -webkit-linear-gradient(0deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 350px);
+	background: linear-gradient(0deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 350px);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
 }
 #dessin-pane canvas {
 	width: 100%;
 	height: 100%;
 	border: 0px none black;
 }
+
+
 #curseur-dessin {
 	position: absolute;
-	background-color: rgb(255,255,0);
-	width: 50px;
-	height: 50px;
+	background-color: rgba(255,255,255,0);
+	width: 0px;
+	height: 0px;
 	pointer-events: none;
 }
+
 
 #menu-dessin {
 	font-family: "Overpass", Sans-serif;
@@ -186,9 +136,7 @@ canvas {
 	padding: 0px;
 	float: right;
 	box-shadow: 2px 5px 8px -3px rgba(0,0,0,0.25);
-
 	transition: all 0.35s ease;
-
 	user-select: none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
@@ -198,7 +146,6 @@ canvas {
 .actions-dessin:hover {
 	background-color: rgba(245,245,255,1);
 	box-shadow: 1px 10px 8px -4px rgba(0,0,0,0.4);
-
 	transition: all 0.35s ease;
 }
 .actions-dessin svg {
@@ -215,9 +162,6 @@ canvas {
 	fill: rgb(75,155,245);
 	transition: all 0.25s ease;
 }
-
-
-
 .options-dessin {
 	position: relative;
 	display: inline-block;
@@ -229,9 +173,7 @@ canvas {
 	border-radius: 50px;
 	background-color: rgba(245,245,255,0.75);
 	box-shadow: 2px 5px 8px -3px rgba(0,0,0,0.25);
-
 	transition: box-shadow 0.35s ease;
-
 	user-select: none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
@@ -246,6 +188,7 @@ canvas {
 #opacity, #brush-size, #text-size {
 	width: 175px;
 }
+
 
 #goutte {
 	position: absolute;
@@ -285,11 +228,12 @@ canvas {
 	height: 50px;
 	border-radius: 25px;
 	cursor: pointer;
-	box-shadow: 2px 5px 5px -3px rgba(0,0,0,0.35);
+	box-shadow: 2px 4px 3px -4px rgba(0,0,0,0.4);
 }
 .echantillons:last-child {
 	margin: 0px 0px 0px 0px !important;
 }
+
 
 .options-dessin label {
 	font-size: 11px;
@@ -306,14 +250,14 @@ canvas {
 	border-radius: 2px;
 	background: rgb(85,85,85);
 	outline: none;
-	-webkit-transition: .2s;
+	-webkit-transition: opacity .2s;
 	transition: opacity .2s;
 }
 .options-dessin input::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
-	width: 15px;
-	height: 15px;
+	width: 20px;
+	height: 20px;
 	border-radius: 50%; 
 	background: rgba(245,245,255,1);
 	box-shadow: 2px 3px 5px -2px rgba(0,0,0,0.5);
@@ -321,8 +265,8 @@ canvas {
 }
 .options-dessin input::-moz-range-thumb {
 	appearance: none;
-	width: 15px;
-	height: 15px;
+	width: 20px;
+	height: 20px;
 	border-radius: 50%; 
 	background: rgba(245,245,255,1);
 	box-shadow: 2px 3px 5px -2px rgba(0,0,0,0.5);
@@ -355,8 +299,75 @@ canvas {
 	transition: all 0.4s ease-in-out;
 }
 
-#palette, #calque-dessiner, #calque-ecrire, #calque-effacer-tout, #calque-undo, #calque-redo {
+#palette, #calque-dessiner, #calque-ecrire, #calque-effacer-tout, #calque-undo, #calque-redo, #calque-choose {
 	cursor: pointer;
+}
+
+#calque-book {
+	position: absolute;
+	display: none;
+	width: 125px;
+	height: auto;
+	background-color: transparent;
+	border-radius: 30px;	
+	cursor: default;
+	left: -38px;
+	bottom: 60px;
+	padding: 0px;
+}
+#calque-book input {
+	display: none;
+}
+.calque-select {
+	text-indent: 32px;
+	text-align: left;
+	font-family: "Overpass", Sans-serif;
+	font-size: 13px;
+	color: rgba(135,135,135,0.75);
+	position: relative;
+	cursor: pointer;
+	display: block;
+	padding: 8px 0px 6px 0px;
+	width: 100%;
+	background-color: rgba(245,245,245,0.75);
+	border-radius: 28px;
+	margin: 6px 0px;
+	box-shadow: 1px 1px 2px -2px rgba(0,0,0,0.2);	
+	transition: all .2s ease;
+}
+#calque-book input:checked + .calque-select {
+	box-shadow: 2px 3px 8px -3px rgba(0,0,0,0.4);
+	color: rgba(35,35,35,1);
+	background-color: rgba(255,255,255,1);
+	transition: all .2s ease;
+}
+.calque-select div {
+	position: absolute;
+	display: inline-block;
+	content: "";
+	width: 14px;
+	height: 14px;
+	border-radius: 100%;
+	margin: 0px;
+	top: 8px;
+	left: 9px;
+	box-shadow: inset -1px -1px 2px -2px rgba(0,0,0,0.3);
+	opacity: 0.75;
+	transition: box-shadow .2s ease, opacity .2s ease;
+}
+#calque-book input:checked + .calque-select div {
+	position: absolute;
+	display: inline-block;
+	content: "";
+	width: 14px;
+	height: 14px;
+	border-radius: 100%;
+	margin: 0px;
+	top: 8px;
+	left: 9px;
+	box-shadow: inset 2px 3px 2px -2px rgba(0,0,0,0.3);
+	opacity: 1;
+	transition: box-shadow .2s ease, opacity .2s ease;
 }
 
 /* __________ STYLE DE LA GALERIE __________ */

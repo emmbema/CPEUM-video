@@ -43,35 +43,25 @@
 		<div id="cpeum-carte"></div>
 		<div id="video-container">
 			<video id="cpeum-video" controls></video>
-		</div>		
-		<div id="dessin-pane">			
+		</div>
+		<div id="dessin-pane">
 			<canvas id="cpeum-dessin" touch-action="none"></canvas>
-			<div id="menu-dessin">
 
+			<div id="menu-dessin">
 				<div id="palette" class="options-dessin">
 					<ul id="echantillons-container">
-						<li class="echantillons" r="0" g="190" b="156">
-						</li>
-						<li class="echantillons" r="81" g="216" b="139">
-						</li>
-						<li class="echantillons" r="44" g="151" b="221">
-						</li>
-						<li class="echantillons" r="55" g="70" b="216">
-						</li>
-						<li class="echantillons" r="156" g="86" b="154">
-						</li>
-						<li class="echantillons" r="231" g="75" b="60">
-						</li>
-						<li class="echantillons" r="230" g="125" b="33">
-						</li>
-						<li class="echantillons" r="245" g="200" b="15">
-						</li>
-						<li class="echantillons" r="36" g="46" b="56">
-						</li>
-						<li class="echantillons" r="240" g="238" b="234">
-						</li>	
+						<li class="echantillons" r="0" g="190" b="156" forlayer="calque1"></li>
+						<li class="echantillons" r="81" g="216" b="139" forlayer="calque2"></li>
+						<li class="echantillons" r="44" g="151" b="221" forlayer="calque3"></li>
+						<li class="echantillons" r="55" g="70" b="216" forlayer="calque4"></li>
+						<li class="echantillons" r="156" g="86" b="154" forlayer="calque5"></li>
+						<li class="echantillons" r="231" g="75" b="60" forlayer="calque6"></li>
+						<li class="echantillons" r="230" g="125" b="33" forlayer="calque7"></li>
+						<li class="echantillons" r="245" g="200" b="15" forlayer="calque8"></li>
+						<li class="echantillons" r="36" g="46" b="56" forlayer="calque9"></li>
+						<li class="echantillons" r="240" g="238" b="234" forlayer="calque10"></li>	
 					</ul>
-					<div id="goutte"></div>					
+					<div id="goutte"></div>
 				</div>
 
 				<div id="calque-dessiner" class="options-dessin">
@@ -90,14 +80,15 @@
 
 				<div id="brush-size" class="options-dessin">
 					<label for="brush-size-slider">Épaisseur</label>
-					<input class="cfg-fabric" type="range" min="1" max="300" value="2" id="brush-size-slider">
+					<input class="cfg-fabric" type="range" min="1" max="100" value="2" id="brush-size-slider">
 				</div>
+
 				<div id="opacity" class="options-dessin">
 					<label for="opacity-slider">Opacité</label>
 					<input class="cfg-fabric" type="range" min="1" max="100" value="100" id="opacity-slider">
 				</div>
 
-				<div id="calque-ecrire" class="options-dessin">					
+				<div id="calque-ecrire" class="options-dessin">
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px"
 						 height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 						<g id="ecrire">
@@ -115,15 +106,31 @@
 
 				<div id="text-size" class="options-dessin">
 					<label for="text-size-slider">Taille</label>
-					<input class="cfg-fabric" type="range" min="12" max="200" value="24" id="text-size-slider">
+					<input class="cfg-fabric" type="range" min="12" max="124" value="24" id="text-size-slider">
 				</div>
 
-				<div id="calque-effacer-tout" class="actions-dessin">
-					Tout effacer!
+				<div title="Tout effacer" id="calque-effacer-tout" class="actions-dessin">
+					<svg style="margin-top: 10px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="34px"
+					height="34px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+						<g>
+							<path d="M31.502,39c1.063,0,1.947,0.163,1.996-0.909l1-21c0.05-1.104-0.804-1.039-1.907-1.089
+							c-1.085-0.057-2.038-0.197-2.089,0.907l-1,21c-0.05,1.104,0.804,1.039,1.907,1.089C31.44,38.999,31.471,39,31.502,39z"/>
+							<path d="M18.499,39c0.031,0,0.062-0.001,0.092-0.002c1.104-0.05,1.957,0.015,1.907-1.089l-1-21
+							c-0.05-1.104-0.991-0.954-2.089-0.907c-1.104,0.05-1.957-0.015-1.907,1.089l1,21C16.551,39.163,17.436,39,18.499,39z"/>
+							<path d="M27,38V17c0-1.104-0.896-1-2-1s-2-0.104-2,1v21c0,1.104,0.896,1,2,1S27,39.104,27,38z"/>
+							<path d="M43,7h-9.08c-0.487-3.387-3.4-6-6.92-6h-4c-3.52,0-6.433,2.613-6.92,6H6C4.896,7,5,7.896,5,9s-0.104,2,1,2h37
+							c1.104,0,1-0.896,1-2S44.104,7,43,7z M23,5h4c1.302,0,2.401,0.838,2.815,2h-9.631C20.599,5.838,21.698,5,23,5z"/>
+							<path d="M40.746,13.515c-1.102-0.134-2.096-0.357-2.23,0.739L35.26,40.548C34.969,42.878,32.7,45,30.5,45h-11
+							c-2.2,0-4.468-2.122-4.759-4.451l-3.256-26.171c-0.136-1.096-1.129-0.875-2.232-0.738c-1.096,0.137-1.874,0.136-1.738,1.232
+							l3.256,26.172C11.319,45.431,15.235,49,19.5,49h11c4.265,0,8.181-3.569,8.729-7.958l3.256-26.296
+							C42.62,13.649,41.842,13.651,40.746,13.515z"/>
+						</g>
+					</svg>
 				</div>
+
 				<div id="calque-redo" class="actions-dessin">
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px"
-						 height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+					height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 						<g id="redo">
 							<path d="M44.085,23.419l-3.226-12.904c-0.268-1.073-4.148-0.102-3.881,0.97l1.357,5.431l-0.919-0.919
 								c-6.88-6.878-18.075-6.879-24.955,0c-6.88,6.879-6.88,18.074,0,24.955c0.391,0.391,3.61-2.047,2.829-2.828
@@ -132,9 +139,10 @@
 						</g>
 					</svg>
 				</div>
+
 				<div id="calque-undo" class="actions-dessin">
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px"
-						 height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+					height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
 						<g id="undo">
 							<path d="M7.571,23.419l3.226-12.904c0.268-1.073,4.148-0.102,3.881,0.97l-1.357,5.431l0.919-0.919
 								c6.88-6.878,18.075-6.879,24.954,0c6.881,6.879,6.881,18.074,0.001,24.955c-0.391,0.391-3.61-2.047-2.829-2.828
@@ -142,6 +150,26 @@
 								L9.997,25.845c-0.161,0.04-1.465,0.592-2.242-0.184S7.401,24.101,7.571,23.419z"/>
 						</g>
 					</svg>
+				</div>
+
+				<div id="calque-choose" class="actions-dessin">
+					<svg style="margin-top: 7px; margin-left: 1px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="38px"
+					height="38px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+						<g>
+							<path d="M37.336,2.891l-6.521,9.78c-1.882-0.471-3.832-0.72-5.815-0.72c-8.653,0-16.71,4.681-21.026,12.215
+							c-0.295,0.517-0.295,1.151,0,1.668c2.621,4.576,6.635,8.07,11.313,10.131l-5.951,8.926c-0.613,0.919,2.943,2.797,3.328,2.219
+							l28-42C41.276,4.19,37.948,1.972,37.336,2.891z M7.39,25c3.821-6.003,10.481-9.693,17.61-9.693c1.293,0,2.567,0.129,3.814,0.366
+							l-1.928,2.892c-0.6-0.176-1.231-0.275-1.887-0.275c-3.701,0-6.71,3.01-6.71,6.71c0,1.595,0.573,3.05,1.506,4.201l-2.617,3.926
+							C13.207,31.511,9.751,28.71,7.39,25z"/>
+							<path d="M46.026,24.166c-2.048-3.574-4.944-6.496-8.34-8.591l-1.859,2.79c2.7,1.646,5.04,3.896,6.784,6.635
+							C38.789,31.003,32.129,34.693,25,34.693c-0.019,0-0.038-0.002-0.058-0.002l-2.161,3.242c0.735,0.068,1.473,0.115,2.219,0.115
+							c8.652,0,16.71-4.681,21.026-12.215C46.322,25.317,46.322,24.683,46.026,24.166z"/>
+						</g>
+					</svg>
+					<form>
+						<div id="calque-book">
+						</div>
+					</form>
 				</div>
 
 			</div>
