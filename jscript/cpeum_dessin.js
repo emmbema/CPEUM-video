@@ -303,6 +303,13 @@ $(document).keydown(function(e){
 			calque.renderAll();
 		}
 	}
+	// Pour option "redo" avec ctrl-y
+	else if (( e.key == "y" || e.key == "Y" ) && ( e.ctrlKey || e.altKey ) && calqueState) {
+		if (h.length > 0) {
+			isRedoing = true;
+			calque.add(h.pop());
+		}
+	}
 });
 
 $("#calque-effacer-tout").on("click", function () {
