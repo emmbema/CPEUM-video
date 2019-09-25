@@ -93,20 +93,23 @@ $(".cfg-fabric").on("input", function () {
 });
 
 	// Curseur de dessin
-	$("#cpeum-dessin").after("<div id='curseur-dessin'></div>");
+	$("#cpeum-dessin").after("<div id='curseur-dessin'></div><div id='curseur-dessin-bracket'></div>");
 	brushTimer = 0;
 	$(window).mousemove(function (e) {
 		if ( calque.isDrawingMode ) {
 			clearInterval(brushTimer);
 			$("#curseur-dessin").css({
 				"display": "block",
-				"top": e.pageY - brushSize*scaleZoom/2 - 1 + "px",
-				"left": e.pageX - brushSize*scaleZoom/2 - 1 + "px",
-				"width": brushSize*scaleZoom + "px",
-				"height": brushSize*scaleZoom + "px",
+				"top": e.pageY - brushSize*scaleZoom/2 - 1 +"px",
+				"left": e.pageX - brushSize*scaleZoom/2 - 1 +"px",
+				"width": brushSize*scaleZoom +"px",
+				"height": brushSize*scaleZoom +"px",
 				"backgroundColor": "transparent",
 				"border": "1px solid rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+","+inkOpacity/100+")",
 				"border-radius": "100%",
+			});
+			$("#curseur-dessin-bracket").css({
+				"display": "none",
 			});
 			brushTimer = setTimeout( function(){$("#curseur-dessin").fadeOut(700);}, 1400 );
 		}
@@ -114,24 +117,30 @@ $(".cfg-fabric").on("input", function () {
 			clearInterval(brushTimer);
 			$("#curseur-dessin").css({
 				"display": "block",
-				"top": e.pageY - 2*textSize*scaleZoom/3 - 1 + "px",
-				"left": e.pageX - textSize*scaleZoom/8 - 1 + "px",
-				"width": textSize*scaleZoom/4 + "px",
-				"height": textSize*scaleZoom + "px",
+				"top": e.pageY - 2*textSize*scaleZoom/3 - 1 +"px",
+				"left": e.pageX - 1 +"px",
+				"width": textSize*scaleZoom/4 +"px",
+				"height": textSize*scaleZoom +"px",
 				"backgroundColor": "transparent",
-				// "background": "rgba(0,0,0,0)",
-				// "background": "-moz-linear-gradient(90deg, rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",0.1) 0%, rgba(255,255,255,0) 80%)",
-				// "background": "-webkit-linear-gradient(90deg, rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",0.1) 0%, rgba(255,255,255,0) 80%)",
-				// "background": "linear-gradient(90deg, rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",0.1) 0%, rgba(255,255,255,0) 80%)",
 				"border": "1px solid rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
 				"border-right": "none",
-				"border-left": "2px solid rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
 				"border-radius": "3px 0px 0px 3px",
 			});
-			brushTimer = setTimeout( function(){$("#curseur-dessin").fadeOut(700);}, 1400 );
+			$("#curseur-dessin-bracket").css({
+				"display": "block",
+				"top": e.pageY - 2*textSize*scaleZoom/3 - 1 +"px",
+				"left": e.pageX - textSize*scaleZoom/4 - 1 +"px",
+				"width": textSize*scaleZoom/4 +"px",
+				"height": textSize*scaleZoom +"px",
+				"backgroundColor": "transparent",
+				"border": "1px solid rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
+				"border-left": "none",
+				"border-radius": "0px 3px 3px 0px",
+			});
+			brushTimer = setTimeout( function(){$("#curseur-dessin, #curseur-dessin-bracket").fadeOut(700);}, 1400 );
 		}
 		else  {
-			$("#curseur-dessin").css({
+			$("#curseur-dessin, #curseur-dessin-bracket").css({
 				"display": "none",
 				"top": e.pageY - brushSize*scaleZoom/2 + "px",
 				"left": e.pageX - brushSize*scaleZoom/2 + "px",
@@ -248,7 +257,7 @@ $("#dessin-pane canvas").last().on("click", function (e) {
 		var correctedPoint = fabric.util.transformPoint(itextPoint, viewerTransformed);
 		calque.add(new fabric.IText("Insérez une annotation", { 
 		  fontFamily: "Overpass",
-		  left: correctedPoint.x-textSize/8,
+		  left: correctedPoint.x-textSize/4,
 		  top: correctedPoint.y-2*textSize/3,
 		  fontSize: textSize,
 		  fill: "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
