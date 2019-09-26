@@ -196,11 +196,17 @@ canvas {
 }
 .options-dessin:hover {
 	box-shadow: 1px 10px 8px -4px rgba(0,0,0,0.4);
-
 	transition: box-shadow 0.35s ease;
 }
 #opacity, #brush-size, #text-size {
 	width: 175px;
+}
+#calque-alpha {
+	font-family: "Overpass", Sans-serif;
+	position: absolute;
+	width: 175px;
+	top: 15px;
+	left: 35px;
 }
 
 

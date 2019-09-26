@@ -3,9 +3,7 @@ $(document).ready(function() {
 
 /*** CPEUM DESSIN ***/
 
-calqueBackGround = "rgba(235,235,235,0.15)";
-
-calque = new fabric.Canvas("cpeum-dessin", { allowTouchScrolling: false, backgroundColor: calqueBackGround, enableRetinaScaling: true});
+calque = new fabric.Canvas("cpeum-dessin", { allowTouchScrolling: false, backgroundColor: "rgba(255,255,255,1)", enableRetinaScaling: true});
 calque.selection = false;
 
 // Dessin main levé, configuration initiale
@@ -27,6 +25,9 @@ cfgFabric = function () {
 	inkOpacity = parseInt($("#opacity-slider").val(), 10);
 	brushSize = parseInt($("#brush-size-slider").val(), 10);
 	textSize = parseInt($("#text-size-slider").val(), 10);
+	bgAlpha = parseInt($("#calque-bg-slider").val(), 10)/100;
+	calqueBackGround = "rgba(235,235,235,"+bgAlpha+")";
+	calque.backgroundColor = calqueBackGround;
 	calque.freeDrawingBrush.width = brushSize;
 	calque.freeDrawingBrush.color = "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+","+inkOpacity/100+")";
 };

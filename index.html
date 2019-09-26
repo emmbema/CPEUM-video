@@ -45,9 +45,15 @@
 				<video id="cpeum-video" controls></video>
 			</div>
 			<div id="dessin-pane">
-				<canvas id="cpeum-dessin" touch-action="none"></canvas>				
-				<div id="menu-dessin">
+				<canvas id="cpeum-dessin" touch-action="none"></canvas>		
 
+				<div id="calque-alpha" class="options-dessin">
+					<label for="calque-bg-slider">Arrière plan</label>
+					<input class="cfg-fabric" type="range" min="10" max="100" value="15" id="calque-bg-slider">
+				</div>
+
+				<div id="menu-dessin">
+					
 					<div id="palette" class="options-dessin">
 						<ul id="echantillons-container">
 							<li class="echantillons" r="0" g="190" b="156" forlayer="calque1"></li>
