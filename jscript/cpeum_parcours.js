@@ -141,8 +141,14 @@ $("#viewer-pane").on("click", ".eteindre", function () {
 $("#telecharger").click( function () {
 	
 	var captureURLs = [];
+	var captureType = [];
 	$("#gallery").find("img").each( function () {
 		captureURLs.push($(this).attr("src"));
+		if ( $(this).hasClass("captureViewer") ) {
+			captureType.push("Perspective");
+		} else {
+			captureType.push("Carte");
+		};
 	});
 	console.log("nombre de dataURL de captures :"+captureURLs.length);
 
@@ -151,8 +157,11 @@ $("#telecharger").click( function () {
 	var zipFilename = "Images_CPEUM.zip";
 
 	captureURLs.forEach( function (url, i) {
-		var captureName = "Capture_" + document.title.replace("CPEUM : ", "") + "_" + (i + 1) + "." + captureURLs[i].substring("data:image/".length, captureURLs[i].indexOf(";base64"))
-		// loading a file and add it in a zip file
+		var pairN;
+		if ( captureType[i]=="Perspective" ) { pairN = (i+2)/2 } else if ( captureType[i]=="Carte" ) { pairN = (i+1)/2 };
+		var captureName = "Capture_" + document.title.replace("CPEUM : ", "") + "_" + pairN + "_" + captureType[i] + "." + captureURLs[i].substring("data:image/".length, captureURLs[i].indexOf(";base64"))
+		
+		// Loading a file and add it in a zip file
 		captureZip.file(captureName, captureURLs[i].replace(/^data:image\/(png|jpg);base64,/, ""), { base64: true });
 		count++;
 		if (count == captureURLs.length) {
