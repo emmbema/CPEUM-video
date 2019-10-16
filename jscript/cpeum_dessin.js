@@ -10,7 +10,8 @@ calque.selection = false;
 unSelected = false;
 
 calque.isDrawingMode = true;
-calque.freeDrawingCursor = "default";
+calque.freeDrawingCursor = "none";
+calque.defaultCursor = "none";
 calque.freeDrawingBrush.shadow = new fabric.Shadow({
 	blur: 2,
 	offsetX: 1,
@@ -25,13 +26,17 @@ cfgFabric = function () {
 	inkOpacity = parseInt($("#opacity-slider").val(), 10);
 	brushSize = parseInt($("#brush-size-slider").val(), 10);
 	textSize = parseInt($("#text-size-slider").val(), 10);
-	bgAlpha = parseInt($("#calque-bg-slider").val(), 10)/100;
-	calqueBackGround = "rgba(235,235,235,"+bgAlpha+")";
-	calque.backgroundColor = calqueBackGround;
 	calque.freeDrawingBrush.width = brushSize;
 	calque.freeDrawingBrush.color = "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+","+inkOpacity/100+")";
 };
 cfgFabric();
+
+bgAlphaFabric = function () {
+	bgAlpha = parseInt($("#calque-bg-slider").val(), 10)/100;
+	calqueBackGround = "rgba(240,240,240,"+bgAlpha+")";
+	calque.backgroundColor = calqueBackGround;
+};
+bgAlphaFabric();
 
 // Palette de couleurs
 $("#goutte").css({ backgroundColor : "rgb("+inkColor.r+","+inkColor.g+","+inkColor.b+")" });
@@ -74,8 +79,7 @@ calque.on("mouse:down:before", function () {
 	}
 })
 
-
-// Mise à jour du texte...
+// Pour mise à jour du texte...
 updateFabricText = function () {
 	var currentObj = calque.getActiveObject();
 	if ( currentObj !== undefined && currentObj !== null && currentObj.isType("i-text") ) {
@@ -86,11 +90,44 @@ updateFabricText = function () {
 	};
 }
 
-// ...et réponse aux inputs sliders
-$(".cfg-fabric").on("input", function () {
+// ...Réponse aux inputs sliders
+$("#calque-bg-slider").on("input", function () {
+	bgAlphaFabric();
+	calque.renderAll();
+})
+sampleTimer = 0;
+$("#dessiner-mode").append("<div id='sample-dessin'></div>");
+$("#ecrire-mode").append("<div id='sample-text'>Aa</div>");
+$("#brush-size-slider, #opacity-slider, #text-size-slider").on("input", function () {
 	cfgFabric();
 	updateFabricText ();
 	calque.renderAll();
+
+	// Illustrer le résultat de la configuration à la manière "tooltip" (surtout utile pour les appareils qui ne profitent pas du curseur)
+	clearInterval(sampleTimer);
+	if ( calque.isDrawingMode ) {
+		$("#sample-dessin").css({
+			"display": "block",
+			"margin-top": -1* brushSize*scaleZoom +"px",
+			"margin-left": -1* brushSize*scaleZoom/2 +"px",
+			"width": brushSize*scaleZoom +"px",
+			"height": brushSize*scaleZoom +"px",
+			"border-radius": "50%",
+			"backgroundColor": "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+","+inkOpacity/100+")",
+		});
+		sampleTimer = setTimeout( function(){$("#sample-dessin").fadeOut(250);}, 800 );
+	} else if ( !calque.isDrawingMode && calque.getActiveObject() == null ) {
+		$("#sample-text").css({
+			"display": "block",
+			"margin-top": -1* textSize*scaleZoom +"px",
+			//"margin-left": -1* textSize*scaleZoom +"px",
+			//"width": textSize*scaleZoom*2 +"px",
+			"height": textSize*scaleZoom +"px",
+			"fontSize": textSize*scaleZoom +"px",
+			"color": "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
+		});
+		sampleTimer = setTimeout( function(){$("#sample-text").fadeOut(250);}, 800 );
+	}
 });
 
 	// Curseur de dessin
@@ -112,13 +149,13 @@ $(".cfg-fabric").on("input", function () {
 			$("#curseur-dessin-bracket").css({
 				"display": "none",
 			});
-			brushTimer = setTimeout( function(){$("#curseur-dessin").fadeOut(700);}, 1400 );
+			brushTimer = setTimeout( function(){$("#curseur-dessin").fadeOut(600);}, 800 );
 		}
-		else if ( !calque.isDrawingMode && unSelected && !textHover ) {
+		else if ( !calque.isDrawingMode /*&& unSelected*/ && !textHover ) {
 			clearInterval(brushTimer);
 			$("#curseur-dessin").css({
 				"display": "block",
-				"top": e.pageY - 2*textSize*scaleZoom/3 - 1 +"px",
+				"top": e.pageY - textSize*scaleZoom/2 - 1 +"px",
 				"left": e.pageX - 1 +"px",
 				"width": textSize*scaleZoom/4 +"px",
 				"height": textSize*scaleZoom +"px",
@@ -129,7 +166,7 @@ $(".cfg-fabric").on("input", function () {
 			});
 			$("#curseur-dessin-bracket").css({
 				"display": "block",
-				"top": e.pageY - 2*textSize*scaleZoom/3 - 1 +"px",
+				"top": e.pageY - textSize*scaleZoom/2 - 1 +"px",
 				"left": e.pageX - textSize*scaleZoom/4 - 1 +"px",
 				"width": textSize*scaleZoom/4 +"px",
 				"height": textSize*scaleZoom +"px",
@@ -138,16 +175,17 @@ $(".cfg-fabric").on("input", function () {
 				"border-left": "none",
 				"border-radius": "0px 3px 3px 0px",
 			});
-			brushTimer = setTimeout( function(){$("#curseur-dessin, #curseur-dessin-bracket").fadeOut(700);}, 1400 );
+			brushTimer = setTimeout( function(){$("#curseur-dessin, #curseur-dessin-bracket").fadeOut(600);}, 800 );
 		}
 		else  {
+			calque.defaultCursor = "none";
 			$("#curseur-dessin, #curseur-dessin-bracket").css({
 				"display": "none",
 				"top": e.pageY - brushSize*scaleZoom/2 + "px",
 				"left": e.pageX - brushSize*scaleZoom/2 + "px",
 				"width": "0px",
 				"height": "0px",
-			})
+			});
 		}
 	});
 
@@ -259,7 +297,7 @@ $("#dessin-pane canvas").last().on("click", function (e) {
 		calque.add(new fabric.IText("Insérez une annotation", { 
 		  fontFamily: "Overpass",
 		  left: correctedPoint.x-textSize/4,
-		  top: correctedPoint.y-2*textSize/3,
+		  top: correctedPoint.y-textSize/2,
 		  fontSize: textSize,
 		  fill: "rgba("+inkColor.r+","+inkColor.g+","+inkColor.b+",1)",
 		}));
