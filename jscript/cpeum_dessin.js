@@ -96,8 +96,9 @@ $("#calque-bg-slider").on("input", function () {
 	calque.renderAll();
 })
 sampleTimer = 0;
-$("#dessiner-mode").append("<div id='sample-dessin'></div>");
-$("#ecrire-mode").append("<div id='sample-text'>Aa</div>");
+//$("#dessiner-mode").append("<div id='sample-dessin'></div>");
+//$("#ecrire-mode").append("<div id='sample-text'>Aa</div>");
+$("#menu-dessin").append("<div id='sample-dessin'></div><div id='sample-text'>Aa</div>");
 $("#brush-size-slider, #opacity-slider, #text-size-slider").on("input", function () {
 	cfgFabric();
 	updateFabricText ();
@@ -105,8 +106,17 @@ $("#brush-size-slider, #opacity-slider, #text-size-slider").on("input", function
 
 	// Illustrer le résultat de la configuration à la manière "tooltip" (surtout utile pour les appareils qui ne profitent pas du curseur)
 	clearInterval(sampleTimer);
+	var sliderPosOffset = $(this).parent().parent().position().left;
+	var sliderRatio = ($(this).val() - $(this).attr("min")) / ($(this).attr("max")-$(this).attr("min"))
+	var sliderPos = sliderRatio * ($(this).width()-20) + 10 - 35;	/* où 20 est la largeur du slider-thumb et 10 la demi-largeur */
+	console.log("sliderRatio: "+sliderRatio);
+	console.log("sliderPos: "+sliderPos);
+	console.log($(this));
+	console.log($(this).parent());
+
 	if ( calque.isDrawingMode ) {
 		$("#sample-dessin").css({
+			"left": $(this).offset().left + sliderPos + "px",
 			"display": "block",
 			"margin-top": -1* brushSize*scaleZoom +"px",
 			"margin-left": -1* brushSize*scaleZoom/2 +"px",
@@ -118,9 +128,10 @@ $("#brush-size-slider, #opacity-slider, #text-size-slider").on("input", function
 		sampleTimer = setTimeout( function(){$("#sample-dessin").fadeOut(250);}, 800 );
 	} else if ( !calque.isDrawingMode && calque.getActiveObject() == null ) {
 		$("#sample-text").css({
+			"left": $(this).offset().left + sliderPos + "px",
 			"display": "block",
 			"margin-top": -1* textSize*scaleZoom +"px",
-			//"margin-left": -1* textSize*scaleZoom +"px",
+			"margin-left": -0.5* $("#sample-text").width() +"px",
 			//"width": textSize*scaleZoom*2 +"px",
 			"height": textSize*scaleZoom +"px",
 			"fontSize": textSize*scaleZoom +"px",

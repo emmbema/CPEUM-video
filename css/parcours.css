@@ -131,7 +131,6 @@ canvas {
 	display: none;
 	content: "";
 	position: absolute;
-	left: 50%;
 	top: -20px;
 	width: 100px;
 	height: 100px;
@@ -144,9 +143,8 @@ canvas {
 	font-family: "Overpass", Sans-serif;
 	position: absolute;
 	text-align: center;
-	left: 0px;
 	top: -20px;
-	width: 100%;
+	width: 150px;
 	height: 0px;
 	padding: 0px;
 	margin: 0px;
